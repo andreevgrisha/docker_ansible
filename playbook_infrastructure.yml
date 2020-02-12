@@ -1,0 +1,35 @@
+---
+
+- hosts: drone
+  gather_facts: no
+  connection: local
+  tasks:
+    - name: Start frontend container
+      docker_container:
+        name: dyno_Frontend
+        image: centos/nginx-112-centos7
+        user: root
+        volumes:
+         - /tmp/ssh:/tmp/ssh
+        command: /bin/bash /tmp/ssh/ssh_provision.sh 
+
+    - name: Start backend container
+      docker_container:
+        name: dyno_Backend
+        user: root
+        volumes:
+         - /tmp/ssh:/tmp/ssh
+        command: /bin/bash /tmp/ssh/ssh_provision.sh
+
+    - name: Start database container
+      docker_container:
+        name: dyno_Database
+        image: centos/mariadb-101-centos7
+        user: root
+        volumes:
+         - /tmp/ssh:/tmp/ssh
+        command: /bin/bash /tmp/ssh/ssh_provision.sh
+
+    - name: Make dynamic inventory
+      command: /home/admin/ansible/ip_gather.sh
+...
