@@ -1,35 +1,36 @@
 ---
 
-- hosts: drone
+- hosts: grilab.io
   gather_facts: no
   connection: local
   tasks:
     - name: Start frontend container
       docker_container:
         name: dyno_Frontend
-        image: centos/nginx-112-centos7
+        image: nginx
         user: root
         volumes:
-         - /tmp/ssh:/tmp/ssh
+         - /home/gri/docker_ansible/scripts:/tmp/ssh
         command: /bin/bash /tmp/ssh/ssh_provision.sh 
 
     - name: Start backend container
       docker_container:
         name: dyno_Backend
+        image: nginx
         user: root
         volumes:
-         - /tmp/ssh:/tmp/ssh
+         - /home/gri/docker_ansible/scripts:/tmp/ssh
         command: /bin/bash /tmp/ssh/ssh_provision.sh
 
     - name: Start database container
       docker_container:
         name: dyno_Database
-        image: centos/mariadb-101-centos7
+        image: mariadb
         user: root
         volumes:
-         - /tmp/ssh:/tmp/ssh
+         - /home/gri/docker_ansible/scripts:/tmp/ssh
         command: /bin/bash /tmp/ssh/ssh_provision.sh
 
     - name: Make dynamic inventory
-      command: /home/admin/ansible/ip_gather.sh
+      command: /home/gri/docker_ansible/scripts/ip_gather.sh
 ...

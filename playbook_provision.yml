@@ -10,26 +10,24 @@
   gather_facts: false
   tasks:
   - name: Deploy site content
-    copy: src=/tmp/html/index.html dest=/usr/share/nginx/www mode=06444
+    copy: src=/home/gri/docker_ansible/index.html dest=/usr/share/nginx/www mode=06444
 
 - hosts: backend
   tasks:
   - name: Check is service installed
-    yum:
+    apt:
       name: sqlite
       state: present
 
 - hosts: database
   tasks:
-  - name: Add password to root
-    mysql_user:
-     login_user: root
-     login_password: ""
-     user: root
-     check_implicit_admin: true
-     password: "pass"
-     host: localhost
-
+  - name: Add pip
+    apt:
+      name: python-pip
+      state: present
+  - name: Add PyMySQL module
+    pip:
+      name: pymysql
     
 
 
